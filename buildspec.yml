@@ -13,12 +13,13 @@ phases:
       - echo Building Vite app...
       - npm run build
 
-post_build:
-  commands:
-    - echo Deploying to S3...
-    - aws s3 sync dist/ s3://artifacts-bucket-react-app/ --delete
+  post_build:
+    commands:
+      - echo Zipping build artifacts...
+      - zip -r vite-build.zip dist/
+      - echo Deploying to S3...
+      - aws s3 sync dist/ s3://artifacts-bucket-react-app/ --delete
 
 artifacts:
   files:
-    - '**/*'
-  base-directory: dist
+    - vite-build.zip
